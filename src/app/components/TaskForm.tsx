@@ -35,9 +35,8 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
   };
 
   // Renderização condicional: se passou das 10h, mostra aviso de bloqueio
-  // ! if (!podeCriarTarefas()) {
-  // ! comentado para testes, em cima
-  if (false) {
+  if (!podeCriarTarefas()) {
+    // if (false) {
     return (
       <div className='w-full max-w-2xl mx-auto p-4 bg-red-50 border border-red-200 rounded-lg'>
         <div className='flex items-center gap-3'>
