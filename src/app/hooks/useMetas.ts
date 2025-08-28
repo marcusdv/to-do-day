@@ -8,6 +8,8 @@ import { Tarefa } from "../types";
 export function useMetas(tarefas: Tarefa[], metaPercentual: number = 80) {
 
   const tarefasConcluidas = tarefas.filter((tarefa) => tarefa.concluida).length;
+  const tarefasPrioridadeAltaConcluidas = tarefas.filter((tarefa) => tarefa.prioridade === 'alta' && tarefa.concluida).length;
+  const totalTarefasPrioridadeAlta = tarefas.filter((tarefa) => tarefa.prioridade === 'alta').length;
 
   /**
    * Calcula o progresso das tarefas concluídas em relação ao total
@@ -18,6 +20,15 @@ export function useMetas(tarefas: Tarefa[], metaPercentual: number = 80) {
 
     if (totalTarefas === 0) return 0;
     return Math.round((tarefasConcluidas / totalTarefas) * 100);
+  };
+
+  /**
+   * Verifica se todas as tarefas de prioridade alta foram concluídas
+   * @returns true se todas as tarefas de alta prioridade estão concluídas
+   */
+  const todasPrioridadeAltaConcluidas = (): boolean => {
+    if (totalTarefasPrioridadeAlta === 0) return true; // Se não há tarefas de alta prioridade, considera como atendido
+    return tarefasPrioridadeAltaConcluidas === totalTarefasPrioridadeAlta;
   };
 
   /**
@@ -35,22 +46,44 @@ export function useMetas(tarefas: Tarefa[], metaPercentual: number = 80) {
 
   const getMensagemMotivacional = () => {
     const progresso = calcularProgresso(tarefas);
-    if (progresso === 0) return "🚀 Vamos começar o dia!";
-    if (progresso < 25) return "💪 Você consegue! Continue assim!";
-    if (progresso < 50) return "⚡ Bom ritmo! Não pare agora!";
-    if (progresso < 75) return "🔥 Quase lá! Você está indo bem!";
-    if (progresso < metaPercentual) return "🎯 Quase batendo a meta!";
-    if (progresso >= metaPercentual) return "🎉 PARABÉNS! Meta atingida!";
-    if (progresso === 100) return "👑 PERFEITO! Dia 100% concluído!";
+    const todasAltasConcluidas = todasPrioridadeAltaConcluidas();
+    
+    // Se não atingiu 80% ainda
+    if (progresso < metaPercentual) {
+      if (progresso === 0) return "🚀 Vamos começar o dia!";
+      if (progresso < 25) return "💪 Você consegue! Continue assim!";
+      if (progresso < 50) return "⚡ Bom ritmo! Não pare agora!";
+      if (progresso < 75) return "🔥 Quase lá! Você está indo bem!";
+      return "🎯 Quase batendo a meta!";
+    }
+    
+    // Se atingiu 80% mas ainda tem prioridades altas pendentes
+    if (progresso >= metaPercentual && !todasAltasConcluidas) {
+      return "🟡 Atingiu 80%, mas ainda há tarefas ALTA pendentes!";
+    }
+    
+    // Se atingiu 80% E todas as altas estão concluídas
+    if (progresso >= metaPercentual && todasAltasConcluidas) {
+      if (progresso === 100) return "👑 PERFEITO! Dia 100% concluído!";
+      return "🎉 PARABÉNS! Meta completa atingida!";
+    }
+    
+    return "📈 Continue o ótimo trabalho!";
   };
 
   /**
    * Verifica se a meta de tarefas concluídas foi atingida
-   * @returns true se a meta foi atingida, false caso contrário
+   * Para a meta ser atingida, duas condições devem ser atendidas:
+   * 1. Pelo menos metaPercentual% das tarefas estão concluídas
+   * 2. TODAS as tarefas de prioridade alta estão concluídas
+   * @returns true se AMBAS as condições forem atendidas, false caso contrário
    */
   const getMetaAtingida = (): boolean => {
     const progresso = calcularProgresso(tarefas);
-    return progresso >= metaPercentual;
+    const todasAltasConcluidas = todasPrioridadeAltaConcluidas();
+    
+    // Meta só é atingida se AMBAS condições forem verdadeiras
+    return progresso >= metaPercentual && todasAltasConcluidas;
   };
 
   return {
@@ -58,5 +91,9 @@ export function useMetas(tarefas: Tarefa[], metaPercentual: number = 80) {
     getMensagemMotivacional,
     tarefasParaMeta,
     getMetaAtingida,
+    // Adicionar informações úteis sobre prioridades altas
+    totalTarefasPrioridadeAlta,
+    tarefasPrioridadeAltaConcluidas,
+    todasPrioridadeAltaConcluidas,
   };
 }
