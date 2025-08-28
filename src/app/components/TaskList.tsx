@@ -72,7 +72,7 @@ export function TaskList({ tarefas, onToggleTask }: TaskListProps) {
                 </button>
 
                 {/* Container do texto da tarefa */}
-                <div className='flex-1'>
+                <div className='flex-1 select-none '>
                   <span className={`text-lg ${tarefa.concluida ? 'line-through text-gray-500' : `${textColor}` // Aplica riscado se concluída
                     }`}>
                     {tarefa.nome}

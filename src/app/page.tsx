@@ -65,22 +65,22 @@ export default function Home() {
 
   return (
     // Container principal com fundo gradiente
-    <div className='min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4'>
+
+    <div className='min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 pb-52'>
       {/* Container centralizado com largura máxima */}
-      <div className="max-w-2xl mx-auto flex flex-col gap-8">
+      <div className="max-w-2xl mx-auto flex flex-col gap-4">
 
         {/* ===== 📋 CABEÇALHO ===== */}
-        <Header tempoRestante={tempoRestante} />
+        <Header tempoRestante={tempoRestante} tarefas={tarefas} />
 
         {/* ===== 📝 FORMULÁRIO DE ADIÇÃO DE TAREFAS ===== */}
-        <TaskForm adicionarTarefa={adicionarTarefa} />
+        <TaskForm adicionarTarefa={adicionarTarefa} tarefas={tarefas} />
 
         {/* ===== 📋 LISTA DE TAREFAS ===== */}
         <TaskList tarefas={tarefas} onToggleTask={concluirTarefa} />
 
-        {/* ===== 📊 ESTATÍSTICAS ===== */}
-        <MetasComponent tarefas={tarefas} />
       </div>
     </div>
+
   );
 }

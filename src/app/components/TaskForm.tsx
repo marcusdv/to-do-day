@@ -6,24 +6,42 @@
  */
 
 import { useState } from 'react';
-import { podeCriarTarefas } from '../utils/dateUtils';
 import { Tarefa } from "../types";
+import { useMetas } from '../hooks/useMetas';
 
 interface TaskFormProps {
   adicionarTarefa: (nome: string, prioridade: Tarefa["prioridade"]) => void;
+  tarefas: Tarefa[];
 }
 
 /**
  * Componente de formulário para adicionar novas tarefas
  * Gerencia o input do usuário e valida se ainda é possível criar tarefas
  */
-export function TaskForm({ adicionarTarefa }: TaskFormProps) {
+export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
   // Estado local para controlar o valor do input de texto
   const [inputTarefa, setInputTarefa] = useState('');
 
   // Estado local para controlar a prioridade da tarefa
   const [prioridade, setPrioridade] = useState<'baixa' | 'media' | 'alta'>('baixa');
 
+
+
+  const {
+    calcularProgresso,
+    getMensagemMotivacional,
+    tarefasParaMeta,
+    getMetaAtingida,
+  } = useMetas(tarefas);
+
+
+  // Cálculos locais
+  const progresso = calcularProgresso(tarefas);
+  const metaAtingida = getMetaAtingida();
+  const faltamTarefas = tarefasParaMeta();
+  const totalTarefas = tarefas.length;
+  const tarefasConcluidas = tarefas.filter(t => t.concluida).length;
+  const META_PERCENTUAL = 80;
   /**
    * Função para processar a submissão de nova tarefa
    * Valida horário limite e se o input não está vazio
@@ -41,6 +59,15 @@ export function TaskForm({ adicionarTarefa }: TaskFormProps) {
     // Chama função callback para adicionar a tarefa e limpa o input
     adicionarTarefa(inputTarefa.trim(), prioridade);
     setInputTarefa('');
+  };
+
+  // Cor da barra baseada no progresso
+  const getCorBarra = () => {
+    if (progresso < 25) return "bg-red-500";
+    if (progresso < 50) return "bg-orange-500";
+    if (progresso < 75) return "bg-yellow-500";
+    if (progresso < META_PERCENTUAL) return "bg-blue-500";
+    return "bg-green-500";
   };
 
   // Renderização condicional: se passou das 10h, mostra aviso de bloqueio
@@ -74,8 +101,10 @@ export function TaskForm({ adicionarTarefa }: TaskFormProps) {
           placeholder="Adicionar nova tarefa..."
           className='flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all'
         />
+
+
         {/* Botão para escolher prioridade da tarefa */}
-        <ul className='flex gap-2'>
+        <ul className='flex gap-4 items-center'>
           <li>
             <button
               onClick={() => setPrioridade('baixa')}
@@ -105,6 +134,7 @@ export function TaskForm({ adicionarTarefa }: TaskFormProps) {
           </li>
         </ul>
 
+
         {/* Botão para submeter a nova tarefa */}
         <button
           onClick={handleSubmit}
@@ -112,6 +142,30 @@ export function TaskForm({ adicionarTarefa }: TaskFormProps) {
         >
           Adicionar
         </button>
+      </div>
+
+      {/* Barra de Progresso */}
+
+
+      <div className="w-full bg-gray-200 rounded-full h-6 relative px-2 mt-4">
+        {/* Barra de progresso */}
+        <div
+          className={`h-6 rounded-full transition-all duration-700 ease-out ${getCorBarra()}`}
+          style={{ width: `${Math.min(progresso, 100)}%` }}
+        >
+          {/* Texto dentro da barra se houver espaço */}
+          {progresso > 15 && (
+            <span className="absolute inset-0 flex items-center justify-center text-white text-sm font-medium">
+              {progresso}%
+            </span>
+          )}
+        </div>
+
+        {/* Linha da meta */}
+        <div
+          className="absolute top-0 h-6 w-0.5 bg-gray-700"
+          style={{ left: `${META_PERCENTUAL}%`, transform: 'translateX(-50%)' }}
+        />
       </div>
     </div>
   );
