@@ -6,139 +6,120 @@
  * Organiza automaticamente tarefas pendentes primeiro, concluídas depois
  */
 
+import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useLocalStorage } from "./useLocalStorage";
 import { Tarefa } from "../types";
 import { getToday } from "../utils/dateUtils";
 
 /**
- * Hook customizado que encapsula toda lógica de gerenciamento de tarefas
- * Retorna estado das tarefas e funções para manipulá-las
+ * Função para ordenar tarefas por prioridade
+ * PENDENTES: Alta (3) -> Média (2) -> Baixa (1)
+ * CONCLUÍDAS: Todas no final, também por prioridade
  */
+const ordenarPorPrioridade = (tarefas: Tarefa[]): Tarefa[] => {
+  const prioridades = { alta: 3, media: 2, baixa: 1 };
+
+  return [...tarefas].sort((a, b) => {
+    // 🔥 PRIMEIRO CRITÉRIO: Tarefas não concluídas SEMPRE primeiro
+    if (a.concluida !== b.concluida) {
+      return a.concluida ? 1 : -1; // Pendentes (false) = -1, Concluídas (true) = 1
+    }
+
+    // 🎯 SEGUNDO CRITÉRIO: Dentro do mesmo status, ordenar por prioridade
+    const prioridadeA = prioridades[a.prioridade];
+    const prioridadeB = prioridades[b.prioridade];
+
+    if (prioridadeA !== prioridadeB) {
+      return prioridadeB - prioridadeA; // Alta → Média → Baixa
+    }
+
+    // 📅 TERCEIRO CRITÉRIO: Se prioridade igual, mais recentes primeiro
+    return new Date(b.criadaEm).getTime() - new Date(a.criadaEm).getTime();
+  });
+};
+
 export function useTasks() {
-  // Obtém a data atual no formato "YYYY-MM-DD"
-  const hoje = getToday(); // Exemplo: "2025-08-21"
+  const hoje = getToday();
+  const [tarefasRaw, setTarefasRaw] = useLocalStorage<Tarefa[]>(`tarefas-${hoje}`, []);
 
-  // Hook para persistir tarefas no localStorage com chave única por data
-  // Chave exemplo: "tarefas-2025-08-21"
-  const [tarefas, setTarefas] = useLocalStorage<Tarefa[]>(
-    `tarefas-${hoje}`,
-    []
-  );
+  // ✅ Sempre retornar tarefas ordenadas
+  const tarefas = ordenarPorPrioridade(tarefasRaw);
 
-  /**
-   * Função para adicionar uma nova tarefa
-   * Cria tarefa com dados padrão e adiciona no início da lista
-   */
-  const adicionarTarefa = (nome: string) => {
-    const hoje = new Date(); // Exemplo: Wed Aug 21 2025 14:30:45 GMT-0300
+  const adicionarTarefa = (nome: string, prioridade: Tarefa["prioridade"]) => {
+    const hoje = new Date();
 
-    // Define início do dia atual (00:00:00)
-    const inicioDoDia = new Date(
-      hoje.getFullYear(),
-      hoje.getMonth(),
-      hoje.getDate()
-    );
-    // Exemplo: Wed Aug 21 2025 00:00:00 GMT-0300
-
-    // Define fim do dia atual (23:59:59.999)
-    const fimDoDia = new Date(
-      hoje.getFullYear(),
-      hoje.getMonth(),
-      hoje.getDate(),
-      23,
-      59,
-      59,
-      999
-    );
-    // Exemplo: Wed Aug 21 2025 23:59:59 GMT-0300
-
-    // Cria objeto da nova tarefa com dados padrão
     const novaTarefa: Tarefa = {
-      id: uuidv4(), // Gera ID único: "123e4567-e89b-12d3-a456-426614174000"
+      id: crypto.randomUUID(),
       nome,
       concluida: false,
-      criadaEm: inicioDoDia,
-      prazoFinal: fimDoDia,
-      prioridade: "media",
+      criadaEm: hoje,
+      prazoFinal: new Date(hoje.getTime() + 24 * 60 * 60 * 1000), // +1 dia
+      prioridade
     };
 
-    // Adiciona nova tarefa no início da lista (spread operator)
-    setTarefas([novaTarefa, ...tarefas]);
+    // ✅ Adicionar nova tarefa e automaticamente ordenar
+    const novasTarefas = [...tarefasRaw, novaTarefa];
+    const tarefasOrdenadas = ordenarPorPrioridade(novasTarefas);
+    setTarefasRaw(tarefasOrdenadas);
   };
 
-  /**
-   * Função para alternar status de conclusão de uma tarefa
-   * Reorganiza automaticamente: pendentes primeiro, concluídas depois
-   */
   const concluirTarefa = (tarefa: Tarefa) => {
-    setTarefas(
-      tarefas
-        .map((t) => {
-          // Encontra a tarefa pelo ID e alterna seu status
-          if (t.id === tarefa.id) {
-            return { ...t, concluida: !t.concluida };
-          }
-          return t; // Retorna tarefa inalterada se não for a selecionada
-        })
-        .sort((a, b) => {
-          // Organização automática: pendentes ficam no topo
-          if (a.concluida === b.concluida) return 0; // Mantém ordem se mesmo status
-          return a.concluida ? 1 : -1; // Concluídas vão para baixo
-        })
+    const tarefasAtualizadas = tarefasRaw.map(t => 
+      t.id === tarefa.id 
+        ? { ...t, concluida: !t.concluida }
+        : t
     );
+    
+    // ✅ Reordenar após marcar/desmarcar como concluída
+    const tarefasOrdenadas = ordenarPorPrioridade(tarefasAtualizadas);
+    setTarefasRaw(tarefasOrdenadas);
   };
 
-  /**
-   * Função para editar o nome de uma tarefa existente
-   * @param id - ID da tarefa a ser editada
-   * @param novoNome - Novo nome para a tarefa
-   */
   const editarTarefa = (id: string, novoNome: string) => {
-    setTarefas(
-      tarefas.map((t) => (t.id === id ? { ...t, nome: novoNome } : t))
+    const tarefasAtualizadas = tarefasRaw.map(t => 
+      t.id === id ? { ...t, nome: novoNome } : t
     );
+    
+    // ✅ Reordenar após edição
+    const tarefasOrdenadas = ordenarPorPrioridade(tarefasAtualizadas);
+    setTarefasRaw(tarefasOrdenadas);
   };
 
-  /**
-   * Função para excluir tarefa
-   * @param id - ID da tarefa a ser removida
-   */
   const excluirTarefa = (id: string) => {
-    setTarefas(tarefas.filter((t) => t.id !== id));
+    const tarefasAtualizadas = tarefasRaw.filter(t => t.id !== id);
+    setTarefasRaw(tarefasAtualizadas);
   };
 
-  /**
-   * Função para alterar a prioridade da tarefa
-   * @param id - ID da tarefa a ser atualizada
-   * @param novaPrioridade - Nova prioridade para a tarefa
-   */
-  const alterarPrioridade = (
-    id: string,
-    novaPrioridade: Tarefa["prioridade"]
-  ) => {
-    setTarefas(
-      tarefas.map((t) =>
-        t.id === id ? { ...t, prioridade: novaPrioridade } : t
-      )
+  const alterarPrioridade = (id: string, novaPrioridade: Tarefa["prioridade"]) => {
+    const tarefasAtualizadas = tarefasRaw.map(t => 
+      t.id === id ? { ...t, prioridade: novaPrioridade } : t
     );
+    
+    // ✅ Reordenar após alterar prioridade
+    const tarefasOrdenadas = ordenarPorPrioridade(tarefasAtualizadas);
+    setTarefasRaw(tarefasOrdenadas);
   };
 
-  /**
-   * Função para limpar a lista de tarefas
-   */
   const limparTarefas = () => {
-    setTarefas([])
-  }
+    setTarefasRaw([]);
+  };
 
-  // Retorna estado e funções para uso no componente
+  // Estatísticas
+  const totalTarefas = tarefas.length;
+  const tarefasPendentes = tarefas.filter(t => !t.concluida).length;
+  const tarefasConcluidas = tarefas.filter(t => t.concluida).length;
+
   return {
-    tarefas,
+    tarefas, // ✅ Já retorna ordenadas
     adicionarTarefa,
     concluirTarefa,
     editarTarefa,
     excluirTarefa,
     alterarPrioridade,
-    limparTarefas
+    limparTarefas,
+    totalTarefas,
+    tarefasPendentes,
+    tarefasConcluidas
   };
 }

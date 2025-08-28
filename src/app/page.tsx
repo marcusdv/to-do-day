@@ -73,7 +73,7 @@ export default function Home() {
         <Header tempoRestante={tempoRestante} />
 
         {/* ===== 📝 FORMULÁRIO DE ADIÇÃO DE TAREFAS ===== */}
-        <TaskForm onAddTask={adicionarTarefa} />
+        <TaskForm adicionarTarefa={adicionarTarefa} />
 
         {/* ===== 📋 LISTA DE TAREFAS ===== */}
         <TaskList tarefas={tarefas} onToggleTask={concluirTarefa} />
