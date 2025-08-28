@@ -66,7 +66,7 @@ export default function Home() {
   return (
     // Container principal com fundo gradiente
 
-    <div className='min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 pb-52'>
+    <div className='min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4'>
       {/* Container centralizado com largura máxima */}
       <div className="max-w-2xl mx-auto flex flex-col gap-4">
 
