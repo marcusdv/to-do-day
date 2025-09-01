@@ -5,7 +5,7 @@
  * Exibe aviso quando o horário limite é ultrapassado
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tarefa } from "../types";
 import { useMetas } from '../hooks/useMetas';
 
@@ -25,22 +25,16 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
   // Estado local para controlar a prioridade da tarefa
   const [prioridade, setPrioridade] = useState<'baixa' | 'media' | 'alta'>('baixa');
 
-
+  // Referência para o input de tarefa
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     calcularProgresso,
-    getMensagemMotivacional,
-    tarefasParaMeta,
-    getMetaAtingida,
   } = useMetas(tarefas);
 
 
   // Cálculos locais
   const progresso = calcularProgresso(tarefas);
-  const metaAtingida = getMetaAtingida();
-  const faltamTarefas = tarefasParaMeta();
-  const totalTarefas = tarefas.length;
-  const tarefasConcluidas = tarefas.filter(t => t.concluida).length;
   const META_PERCENTUAL = 80;
   /**
    * Função para processar a submissão de nova tarefa
@@ -50,7 +44,7 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
     // Não adiciona se o input estiver vazio ou apenas com espaços
     if (inputTarefa.trim() === '') return;
 
-    // ✅ Adicionar validação de segurança
+    // Adicionar validação de segurança
     if (typeof adicionarTarefa !== 'function') {
       console.error('adicionarTarefa não é uma função!');
       return;
@@ -58,7 +52,12 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
 
     // Chama função callback para adicionar a tarefa e limpa o input
     adicionarTarefa(inputTarefa.trim(), prioridade);
+
+    // limpa layout
     setInputTarefa('');
+
+    // Volta o foco para o input
+    inputRef.current?.focus();
   };
 
   // Cor da barra baseada no progresso
@@ -96,6 +95,7 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
       {/* Campo de input para digitar nova tarefa */}
       <input
         type="text"
+        ref={inputRef}
         value={inputTarefa}
         onChange={(e) => setInputTarefa(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} // Permite submeter com Enter
