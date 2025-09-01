@@ -12,7 +12,6 @@ import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
 import { useTimer } from './hooks/useTimer';
 import { useTasks } from './hooks/useTasks';
-import { MetasComponent } from './components/MetasComponent';
 
 /**
  * Componente principal da aplicação
@@ -27,7 +26,7 @@ export default function Home() {
   const tempoRestante = useTimer(); // Exemplo: "9h 35m 15s"
 
   // Hook customizado para gerenciar todas as operações com tarefas
-  const { tarefas, adicionarTarefa, concluirTarefa } = useTasks();
+  const { tarefas, adicionarTarefa, concluirTarefa, excluirTarefa, editarTarefa } = useTasks();
 
   // useEffect para marcar que o componente foi montado no cliente
   // Executado apenas uma vez após a montagem
@@ -77,7 +76,7 @@ export default function Home() {
         <TaskForm adicionarTarefa={adicionarTarefa} tarefas={tarefas} />
 
         {/* ===== 📋 LISTA DE TAREFAS ===== */}
-        <TaskList tarefas={tarefas} onToggleTask={concluirTarefa} />
+        <TaskList tarefas={tarefas} onToggleTask={concluirTarefa} excluirTarefa={excluirTarefa} editarTarefa={editarTarefa} />
 
       </div>
     </div>

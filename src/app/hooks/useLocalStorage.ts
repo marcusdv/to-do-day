@@ -97,8 +97,7 @@ export function useLocalStorage<T>(key: string, defaultValue: T) {
 
   /**
    * Função para remover o item do localStorage
-   * @return
-   * ns void
+   * @return void
    */
   const removeStoredValue = () => {
     try {

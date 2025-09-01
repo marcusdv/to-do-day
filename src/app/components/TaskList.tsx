@@ -11,13 +11,16 @@ import { Tarefa } from '../types';
 interface TaskListProps {
   tarefas: Tarefa[]; // Array de tarefas para exibir
   onToggleTask: (tarefa: Tarefa) => void; // Função callback para alternar status da tarefa
+  excluirTarefa: (id: string) => void; // Função callback para excluir uma tarefa
+  editarTarefa: (id: string, novaDescricao: string) => void; // Função callback para editar uma tarefa
 }
 
 /**
  * Componente que renderiza a lista de tarefas
  * Gerencia a exibição de tarefas e interações do usuário
  */
-export function TaskList({ tarefas, onToggleTask }: TaskListProps) {
+export function TaskList({ tarefas, onToggleTask, excluirTarefa, editarTarefa }: TaskListProps) {
+
 
   const corPelaPrioridade = (prioridade: Tarefa["prioridade"] /* "baixa | media | alta" */) => {
     switch (prioridade) {
@@ -78,7 +81,23 @@ export function TaskList({ tarefas, onToggleTask }: TaskListProps) {
                     {tarefa.nome}
                   </span>
                 </div>
+
+                {/* Caixa de opções */}
+                <div className='flex items-center gap-2'>
+                  <button
+                    onClick={() => editarTarefa(tarefa.id, prompt('Nova descrição:', tarefa.nome) || tarefa.nome)}
+                    className='text-gray-500 hover:text-gray-700'>
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => excluirTarefa(tarefa.id)}
+                    className='text-red-500 hover:text-red-700'>
+                    Remover
+                  </button>
+                </div>
+
               </div>
+
             )
           })
         )}
