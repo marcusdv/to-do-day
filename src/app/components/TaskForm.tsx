@@ -100,12 +100,12 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
         onChange={(e) => setInputTarefa(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} // Permite submeter com Enter
         placeholder="Adicionar nova tarefa..."
-        className='flex-1 px-4 py-3 md:col-span-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all'
+        className='flex-1 px-4 py-3 md:col-span-full border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all'
       />
 
 
       {/* Botão para escolher prioridade da tarefa */}
-      <ul className='col-span-full flex gap-3 items-center justify-center md:col-span-2'>
+      <ul className='col-span-full md:col-span-3 flex gap-3 items-center justify-center '>
         <li>
           <button
             onClick={() => setPrioridade('baixa')}
@@ -139,7 +139,7 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
       {/* Botão para submeter a nova tarefa */}
       <button
         onClick={handleSubmit}
-        className='col-span-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105'
+        className='md:col-span-5 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105'
       >
         Adicionar
       </button>
