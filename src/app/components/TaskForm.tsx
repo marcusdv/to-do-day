@@ -90,64 +90,62 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
 
   // Renderização normal: formulário ativo para adicionar tarefas
   return (
-    <div className='bg-white rounded-2xl shadow-lg p-6 border border-gray-100'>
-      <div className='flex gap-3'>
-        {/* Campo de input para digitar nova tarefa */}
-        <input
-          type="text"
-          value={inputTarefa}
-          onChange={(e) => setInputTarefa(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} // Permite submeter com Enter
-          placeholder="Adicionar nova tarefa..."
-          className='flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all'
-        />
+    <div className='grid grid-cols-1 gap-4  md:grid-cols-8 gap-x-3 bg-white rounded-2xl shadow-lg p-6 border border-gray-100 '>
 
 
-        {/* Botão para escolher prioridade da tarefa */}
-        <ul className='flex gap-4 items-center'>
-          <li>
-            <button
-              onClick={() => setPrioridade('baixa')}
-              className={` text-white rounded-full px-4 py-2 cursor-pointer
+      {/* Campo de input para digitar nova tarefa */}
+      <input
+        type="text"
+        value={inputTarefa}
+        onChange={(e) => setInputTarefa(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} // Permite submeter com Enter
+        placeholder="Adicionar nova tarefa..."
+        className='flex-1 px-4 py-3 md:col-span-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all'
+      />
+
+
+      {/* Botão para escolher prioridade da tarefa */}
+      <ul className='col-span-full flex gap-3 items-center justify-center md:col-span-2'>
+        <li>
+          <button
+            onClick={() => setPrioridade('baixa')}
+            className={` text-white rounded-full px-4 py-2 cursor-pointer
               ${prioridade === 'baixa' ? 'ring-2 ring-green-800 bg-green-500' : 'bg-green-200'}`}
-            >
-              1
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setPrioridade('media')}
-              className={` text-white rounded-full px-4 py-2 cursor-pointer
+          >
+            1
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={() => setPrioridade('media')}
+            className={` text-white rounded-full px-4 py-2 cursor-pointer
               ${prioridade === 'media' ? 'ring-2 ring-yellow-800 bg-yellow-500' : 'bg-yellow-200'}`}
-            >
-              2
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setPrioridade('alta')}
-              className={` text-white rounded-full px-4 py-2 cursor-pointer
+          >
+            2
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={() => setPrioridade('alta')}
+            className={` text-white rounded-full px-4 py-2 cursor-pointer
               ${prioridade === 'alta' ? 'ring-2 ring-red-800 bg-red-500' : 'bg-red-200'}`}
-            >
-              3
-            </button>
-          </li>
-        </ul>
+          >
+            3
+          </button>
+        </li>
+      </ul>
 
 
-        {/* Botão para submeter a nova tarefa */}
-        <button
-          onClick={handleSubmit}
-          className='px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105'
-        >
-          Adicionar
-        </button>
-      </div>
+      {/* Botão para submeter a nova tarefa */}
+      <button
+        onClick={handleSubmit}
+        className='col-span-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105'
+      >
+        Adicionar
+      </button>
 
       {/* Barra de Progresso */}
-
-
-      <div className="w-full bg-gray-200 rounded-full h-6 relative px-2 mt-4">
+      <div className="col-span-full bg-gray-200 rounded-full h-6 relative">
         {/* Barra de progresso */}
         <div
           className={`h-6 rounded-full transition-all duration-700 ease-out ${getCorBarra()}`}

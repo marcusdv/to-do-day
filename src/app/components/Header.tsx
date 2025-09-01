@@ -2,7 +2,6 @@
  * Componente Header - Cabeçalho com título, data, timer e streak
  */
 
-import { useMetas } from '../hooks/useMetas';
 import { Tarefa } from '../types';
 interface HeaderProps {
   tempoRestante: string;
@@ -10,20 +9,10 @@ interface HeaderProps {
 }
 
 export function Header({ tempoRestante, tarefas }: HeaderProps) {
-  const {
-    calcularProgresso,
-    getMensagemMotivacional,
-    tarefasParaMeta,
-    getMetaAtingida,
-  } = useMetas(tarefas);
 
   // Cálculos locais
-  const progresso = calcularProgresso(tarefas);
-  const metaAtingida = getMetaAtingida();
-  const faltamTarefas = tarefasParaMeta();
   const totalTarefas = tarefas.length;
   const tarefasConcluidas = tarefas.filter(t => t.concluida).length;
-  const META_PERCENTUAL = 80;
 
   return (
     <header className='text-center pt-4'>
