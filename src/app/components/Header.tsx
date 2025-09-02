@@ -2,7 +2,7 @@
  * Componente Header - Cabeçalho com título, data, timer e streak
  */
 
-import { FcAlarmClock, FcList, FcRating } from 'react-icons/fc';
+import { FcAlarmClock, FcList, FcRating, FcTodoList } from 'react-icons/fc';
 import { Tarefa } from '../types';
 interface HeaderProps {
   tempoRestante: string;
@@ -20,7 +20,7 @@ export function Header({ tempoRestante, tarefas }: HeaderProps) {
       {/* Título principal */}
       <div className='inline-flex items-center gap-3 mb-4'>
         <div className='w-10 h-10 bg-white rounded-full flex items-center justify-center'>
-          <span className=' text-xl '><FcList className='w-6 h-6' /></span>
+          <span className=' text-xl '><FcTodoList className='w-6 h-6' /></span>
         </div>
         <div>
           <h1 className='text-4xl font-bold text-black'>

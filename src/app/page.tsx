@@ -12,7 +12,7 @@ import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
 import { useTimer } from './hooks/useTimer';
 import { useTasks } from './hooks/useTasks';
-import { FcList } from "react-icons/fc";
+import { FcTodoList } from "react-icons/fc";
 
 
 
@@ -23,7 +23,7 @@ import { FcList } from "react-icons/fc";
 export default function Home() {
   // Estado para controlar se o componente foi montado no cliente
   // Evita erros de hidratação do Next.js entre servidor e cliente
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false); 
 
   // Hook customizado que retorna tempo restante até meia-noite
   const tempoRestante = useTimer(); // Exemplo: "9h 35m 15s"
@@ -47,7 +47,7 @@ export default function Home() {
           <header className='text-center mb-8 pt-8'>
             <div className='inline-flex items-center gap-3 mb-4'>
               <div className='w-10 h-10 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full flex items-center justify-center'>
-                <span className='text-white text-xl '><FcList className='w-6 h-6' /></span>
+                <span className='text-white text-xl '><FcTodoList className='w-6 h-6' /></span>
               </div>
               <h1 className='text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
                 É Pra Hoje!

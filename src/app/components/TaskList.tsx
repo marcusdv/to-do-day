@@ -6,6 +6,10 @@
  */
 
 import { Tarefa } from '../types';
+import { FcSurvey } from "react-icons/fc";
+
+
+
 
 // Interface que define as props do componente
 interface TaskListProps {
@@ -38,10 +42,10 @@ export function TaskList({ tarefas, onToggleTask, excluirTarefa, editarTarefa }:
       <div className='divide-y divide-gray-100'>
         {tarefas.length === 0 ? (
           // Estado vazio - quando não há tarefas para exibir
-          <div className='p-12 text-center text-gray-500'>
-            <div className='text-6xl mb-4'>📝</div>
+          <div className='p-12 text-center text-gray-500 '>
+            <div className='text-8xl' ><FcSurvey  className='mx-auto'/></div>
             <p className='text-lg'>Nenhuma tarefa adicionada ainda</p>
-            <p className='text-sm mt-2'>Comece adicionando uma tarefa acima!</p>
+            <p className='text-sm '>Comece adicionando uma tarefa acima!</p>
           </div>
         ) : (
           // Mapeia e renderiza cada tarefa da lista
