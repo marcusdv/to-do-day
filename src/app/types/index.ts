@@ -31,7 +31,7 @@ export interface DadosDiarios {
   horarioLimiteCriacao: string; // Horário limite para criar tarefas - Exemplo: "10:00"
   prazoFinal: string; // Horário limite para concluir tarefas - Exemplo: "23:59"
   metaAtingida: boolean; // Se atingiu 80% de conclusão das tarefas
-  finalizado: boolean; // Se o dia já terminou (passou da meia-noite)
+  finalizado: boolean; // Se as tarefas foram concluidas e o botão foi clicado
 }
 
 /**

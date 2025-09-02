@@ -13,6 +13,10 @@ import { TaskList } from './components/TaskList';
 import { useTimer } from './hooks/useTimer';
 import { useTasks } from './hooks/useTasks';
 
+import { FcList } from "react-icons/fc";
+
+
+
 /**
  * Componente principal da aplicação
  * Gerencia todo o estado e orquestra a comunicação entre componentes
@@ -43,11 +47,11 @@ export default function Home() {
         <div className="max-w-2xl mx-auto">
           <header className='text-center mb-8 pt-8'>
             <div className='inline-flex items-center gap-3 mb-4'>
-              <div className='w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center'>
-                <span className='text-white text-xl'>📋</span>
+              <div className='w-10 h-10 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full flex items-center justify-center'>
+                <span className='text-white text-xl '><FcList className='w-6 h-6' /></span>
               </div>
               <h1 className='text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
-                Tarefas de Hoje
+                É Pra Hoje!
               </h1>
             </div>
             <div className='flex items-center justify-center gap-2 text-sm text-gray-600'>
