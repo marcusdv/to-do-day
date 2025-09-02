@@ -19,13 +19,13 @@ export function Header({ tempoRestante, tarefas }: HeaderProps) {
     <header className='text-center pt-4'>
       {/* Título principal */}
       <div className='inline-flex items-center gap-3 mb-4'>
-        <div className='w-10 h-10 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full flex items-center justify-center'>
-          <span className='text-white text-xl '><FcList  className='w-6 h-6'/></span>
+        <div className='w-10 h-10 bg-white rounded-full flex items-center justify-center'>
+          <span className=' text-xl '><FcList className='w-6 h-6' /></span>
         </div>
         <div>
-            <h1 className='text-4xl font-bold bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-transparent'>
+          <h1 className='text-4xl font-bold text-black'>
             É Pra Hoje!
-            </h1>
+          </h1>
           <p className='text-sm text-gray-500 mt-1'>
             {new Date().toLocaleDateString('pt-BR', {
               weekday: 'long',

@@ -12,7 +12,6 @@ import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
 import { useTimer } from './hooks/useTimer';
 import { useTasks } from './hooks/useTasks';
-
 import { FcList } from "react-icons/fc";
 
 

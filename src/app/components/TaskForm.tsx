@@ -101,7 +101,7 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
         {
           progresso >= META_PERCENTUAL && prioridadeAltaConcluida && (
             <div className='col-span-full cursor-pointer '>
-              <button className='px-6 text-2xl py-3 w-full select-none bg-gradient-to-r from-green-500 via-blue-500 to-green-500 text-white rounded-xl hover:from-blue-600 hover:to-green-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 animate-gradient'>
+              <button className='px-6 text-2xl py-3 w-full cursor-pointer select-none bg-gradient-to-r from-white via-blue-500 to-green-500 text-white rounded-xl hover:from-blue-600 hover:to-green-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 animate-gradient'>
                 Concluir dia
               </button>
             </div>
@@ -159,28 +159,28 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
           <li>
             <button
               onClick={() => setPrioridade('baixa')}
-              className={` text-white rounded-full px-4 py-2 cursor-pointer
+              className={` text-white rounded-full px-4 py-2 h-12 w-12 cursor-pointer
               ${prioridade === 'baixa' ? 'ring-2 ring-green-800 bg-green-500' : 'bg-green-200'}`}
             >
-              1
+              !
             </button>
           </li>
           <li>
             <button
               onClick={() => setPrioridade('media')}
-              className={` text-white rounded-full px-4 py-2 cursor-pointer
+              className={` text-white rounded-full px-4 py-2 h-12 w-12 cursor-pointer
               ${prioridade === 'media' ? 'ring-2 ring-yellow-800 bg-yellow-500' : 'bg-yellow-200'}`}
             >
-              2
+              !!
             </button>
           </li>
           <li>
             <button
               onClick={() => setPrioridade('alta')}
-              className={` text-white rounded-full px-4 py-2 cursor-pointer
+              className={` text-white rounded-full px-4 py-2 h-12 w-12 cursor-pointer
               ${prioridade === 'alta' ? 'ring-2 ring-red-800 bg-red-500' : 'bg-red-200'}`}
             >
-              3
+              !!!
             </button>
           </li>
         </ul>
