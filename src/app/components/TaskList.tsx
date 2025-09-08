@@ -6,7 +6,7 @@
  */
 
 import { Tarefa } from '../types';
-import { FcSurvey } from "react-icons/fc";
+import { FcCancel, FcEmptyTrash, FcSurvey } from "react-icons/fc";
 
 
 
@@ -65,7 +65,7 @@ export function TaskList({ tarefas, onToggleTask, excluirTarefa, editarTarefa }:
                 {/* Botão checkbox customizado para marcar/desmarcar tarefa */}
                 <button
                   onClick={() => onToggleTask(tarefa)}
-                  className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${tarefa.concluida
+                  className={`h-6 min-w-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${tarefa.concluida
                     ? 'bg-green-500 border-green-500 text-white shadow-lg' // Estado marcado
                     : 'border-gray-300 hover:border-blue-500 hover:shadow-md' // Estado desmarcado
                     }`}
@@ -79,7 +79,7 @@ export function TaskList({ tarefas, onToggleTask, excluirTarefa, editarTarefa }:
                 </button>
 
                 {/* Container do texto da tarefa */}
-                <div className='flex-1 select-none '>
+                <div className='flex-1 select-none overflow-hidden'>
                   <span className={`text-lg ${tarefa.concluida ? 'line-through text-gray-500' : `${textColor}` // Aplica riscado se concluída
                     }`}>
                     {tarefa.nome}
@@ -91,12 +91,12 @@ export function TaskList({ tarefas, onToggleTask, excluirTarefa, editarTarefa }:
                   <button
                     onClick={() => editarTarefa(tarefa.id, prompt('Nova descrição:', tarefa.nome) || tarefa.nome)}
                     className='text-gray-500 hover:text-gray-700 cursor-pointer select-none'>
-                    Editar
+                    ✏️
                   </button>
                   <button
                     onClick={() => excluirTarefa(tarefa.id)}
                     className='text-red-500 hover:text-red-700 cursor-pointer select-none'>
-                    Remover
+                    <FcCancel  className='h-6 w-6' />
                   </button>
                 </div>
 

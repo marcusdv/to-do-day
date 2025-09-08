@@ -150,6 +150,7 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
           onChange={(e) => setInputTarefa(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} // Permite submeter com Enter
           placeholder="Adicionar nova tarefa..."
+          maxLength={45}
           className='flex-1 px-4 py-3 md:col-span-full border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all'
         />
 
