@@ -8,8 +8,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Tarefa } from "../types";
 import { useMetas } from '../hooks/useMetas';
-import { podeCriarTarefas } from '../utils/dateUtils';
-
 interface TaskFormProps {
   adicionarTarefa: (nome: string, prioridade: Tarefa["prioridade"]) => void;
   tarefas: Tarefa[];
@@ -20,24 +18,25 @@ interface TaskFormProps {
  * Gerencia o input do usuário e valida se ainda é possível criar tarefas
  */
 export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
-  // Estado local para controlar o valor do input de texto
   const [inputTarefa, setInputTarefa] = useState('');
 
-  // Estado local para controlar a prioridade da tarefa
   const [prioridade, setPrioridade] = useState<'baixa' | 'media' | 'alta'>('baixa');
 
-  // Referência para o input de tarefa
+  // Referência para o input de tarefa para focar após adicionar
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Se todas as tarefas de prioridade alta foram concluida
+  // Se todas as tarefas de prioridade alta foram concluídas
   const [prioridadeAltaConcluida, setPrioridadeAltaConcluida] = useState(false);
 
-  // Se o botão de fechar caixa de horario de criar tarefas foi clicado
-  const [alertaVisivel, setAlertaVisivel] = useState(true);
-
+  // Se há mais de 5 tarefas adicionadas (para liberar o botão de concluir dia)
+  const [qtdTarefas, setQtdTarefas] = useState(0);
 
   // Atualiza sempre que as tarefas mudam
   useEffect(() => {
+    // Atualiza a quantidade de tarefas sempre que a lista mudar
+    setQtdTarefas(tarefas.length);
+
+    // Filtra apenas as tarefas de alta prioridade
     const tarefasAlta = tarefas.filter(t => t.prioridade === 'alta');
 
     // Se não há tarefas de alta prioridade, considero como true
@@ -56,7 +55,6 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
   const {
     calcularProgresso,
   } = useMetas(tarefas);
-
 
 
   // Cálculos locais
@@ -99,9 +97,14 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
     return (
       <>
         {
-          progresso >= META_PERCENTUAL && prioridadeAltaConcluida && (
+          progresso >= META_PERCENTUAL && prioridadeAltaConcluida && qtdTarefas >= 5 && (
             <div className='col-span-full cursor-pointer '>
-              <button className='px-6 text-2xl py-3 w-full cursor-pointer select-none bg-gradient-to-r from-white via-blue-500 to-green-500 text-white rounded-xl hover:from-blue-600 hover:to-green-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 animate-gradient'>
+              <button className={`
+                px-6 text-2xl py-3 w-full r select-none  text-white rounded-xl  
+                transition-all duration-200 font-medium shadow-lg hover:shadow-xl 
+                transform hover:scale-105 animate-gradient cursor-pointer 
+                bg-gradient-to-r from-white via-blue-500 to-green-500 hover:from-blue-600 hover:to-green-700
+  `}>
                 Concluir dia
               </button>
             </div>
@@ -109,31 +112,6 @@ export function TaskForm({ adicionarTarefa, tarefas }: TaskFormProps) {
         }
       </>
     )
-  }
-
-  // Renderização condicional: se passou das 10h, mostra aviso de bloqueio
-  if (!podeCriarTarefas()) {
-    return (
-      <>
-        {/* Alerta de horário encerrado */}
-        {/* Caso o botão de fechar caixa seja fechado, o botão ainda aparece as tarefas forem concluidas. */}
-        {alertaVisivel && (
-          <div className='relative w-full max-w-2xl mx-auto p-4 bg-red-50 border border-red-200 rounded-lg'>
-            <div className='flex items-center gap-3'>
-              <span className='text-2xl'>⏰</span>
-              <div>
-                <h3 className='font-semibold text-red-800'>Horário para criar tarefas encerrado</h3>
-                <p className='text-sm text-red-600'>
-                  Você pode criar tarefas apenas até às 10:00h. Foque em concluir as tarefas já criadas!
-                </p>
-              </div>
-            </div>
-            <span className='absolute right-2 top-0  text-lg cursor-pointer' onClick={() => setAlertaVisivel(false)}>x</span>
-          </div>
-        )}
-        {botaoConcluirDia()}
-      </>
-    );
   }
 
   // Renderização normal: formulário ativo para adicionar tarefas

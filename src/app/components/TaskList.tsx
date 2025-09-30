@@ -6,7 +6,7 @@
  */
 
 import { Tarefa } from '../types';
-import { FcCancel, FcEmptyTrash, FcSurvey } from "react-icons/fc";
+import { FcCancel, FcSurvey } from "react-icons/fc";
 
 
 
